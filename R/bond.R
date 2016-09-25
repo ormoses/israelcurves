@@ -9,7 +9,7 @@ bond <- function(dates,payments,face_value=100,name=NULL,issue_date=NULL,type=NU
   if (is.null(name)) {
     name <- lastdate
   }
-  setClass("bond",representation = 
+  setClass("bond",representation =
              list(name="character",dates="Date",payments="numeric",issue_date="Date",maturity="Date",
                   face_value="numeric",type="character",known_CPI="numeric"))
   bond <- list(name=name,dates=dates,payments=payments,issue_date=issue_date,maturity=tail(dates,1),
@@ -26,12 +26,12 @@ create_vanilla_bond <- function(issue_date,first_payment,term,coupon,name=NULL,e
   #Create the payment dates
   if (eom==TRUE) {
     dates <- c(issue_date,seq(
-      update(first_payment,year=year(first_payment),month=month(first_payment)+1,mday=1),
+      lubridate::update(first_payment,year=year(first_payment),month=month(first_payment)+1,mday=1),
       by=paste0(12/payment_frequency," month"),length=term+1)-1)
   } else {
     dates <- c(issue_date,seq(first_payment,by=paste0(12/payment_frequency," month"),length=term+1))
   }
-  
+
   #Calculate how many days each coupon has accumulates
   coupon_days <- diff(dates)
   #remove the issue date from the payment dates because there is no payment there
