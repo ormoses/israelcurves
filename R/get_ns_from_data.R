@@ -3,7 +3,7 @@
 make_params_for_all_dates <- function(bond_list,daily_data,min_obs=6,model="NS",adj_dur=TRUE,adj_vol=FALSE) {
   #define initial guess for the NS
   init_guess=c(4,-4,-3,3)
-  
+
   #split the data by date
   data_by_date <- split(daily_data,daily_data$date)
   #Define a blank dataframe for the results
@@ -16,13 +16,13 @@ make_params_for_all_dates <- function(bond_list,daily_data,min_obs=6,model="NS",
   for (i in seq_along(data_by_date)) {
     data <- data_by_date[[i]]
     #take out bonds with maturity less than 9 months
-    data <- filter(data,term>(9/12))
+    data <- dplyr::filter(data,term>(9/12))
     #if data has more observations than min_obs then calculate:
     if (nrow(data)>min_obs) {
       calc_date <- data$date[1]
-      market_data <- select(data,market_price:name)
+      market_data <- dplyr::select(data,market_price:name)
       result[count,"date"] <- calc_date
-      
+
       # last calculation as initial guess
       NS <- curve_ns(bond_list,market_data,calc_date,init_guess,adj_dur=adj_dur,adj_vol=adj_vol)
       result[count,2:5] <- NS$pars
