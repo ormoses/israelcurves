@@ -23,10 +23,6 @@ curve_ns <- function(bonds_list,market_data,calc_date,init_guess=c(4,-4,-3,3),ad
     market_data <- cbind(market_data,duration=
                           apply(market_data,1,function(x) calc_dur_name(bonds_list,x["name"],calc_date,as.numeric(x["market_price"]))))
   }
-  # if adj_vol==TRUE calculates total volume for simplicity in the calculations
-  if (adj_vol==TRUE) {
-    total_vol <- sum(bonds_data$trade_volume)
-  }
 
   #Create a data frame that contains all bonds from the list and their market_data
   #vector of the names
@@ -43,6 +39,10 @@ curve_ns <- function(bonds_list,market_data,calc_date,init_guess=c(4,-4,-3,3),ad
     # merge both
     bonds_data <- merge(model_bonds,market_data)
 
+    # if adj_vol==TRUE calculates total volume for simplicity in the calculations
+    if (adj_vol==TRUE) {
+      total_vol <- sum(bonds_data$trade_volume)
+    }
     # calculate cost function
     if(adj_dur==FALSE && adj_vol==FALSE) {
       #without adjustments only take sum of squares of differences
