@@ -1,19 +1,23 @@
-require(tidyverse)
-require(Rblpapi)
-
 #Code to get the data from the bloomberg SRCH using bsrch function (a custom SRCH needed to be saved)
 get_bond_data <- function(srch_name) {
-  #get tickers list from a bloomberg custom SRCH
-x <- as.character(bsrch(paste0("FI:",srch_name))$id)
-#get bonds main data
-bond_data <- x %>%
-  bdp(c("SECURITY_NAME","ISSUE_DT","CPN","MATURITY","FIRST_CPN_DT","SERIES","ID_BB")) %>%
-  mutate(ID_BB=paste0(substr(ID_BB, 1, nchar(ID_BB)-1)," Corp")) %>%
-  arrange(MATURITY)
+  #Connect to bloomberg
+  con <- Rblpapi::blpConnect()
 
-#get bonds' cashflows
+  #get tickers list from a bloomberg custom SRCH
+  x <- as.character(Rblpapi::bsrch(paste0("FI:",srch_name))$id)
+  #get bonds main data
+  bond_data <- x %>%
+  Rblpapi::bdp(c("SECURITY_NAME","ISSUE_DT","CPN","MATURITY","FIRST_CPN_DT","SERIES","ID_BB")) %>%
+  dplyr::mutate(ID_BB=paste0(substr(ID_BB, 1, nchar(ID_BB)-1)," Corp")) %>%
+  dplyr::arrange(MATURITY)
+
+  #get bonds' cashflows
   ovrd <- c("USER_LOCAL_TRADE_DATE"="19900101")
-  cashflows <- mapply(bds,x,MoreArgs = list("DES_CASH_FLOW",overrides=ovrd))
+  cashflows <- mapply(Rblpapi::bds,x,MoreArgs = list("DES_CASH_FLOW",overrides=ovrd))
+
+  #disconnect bloomberg
+  Rblpapi::blpDisconnect(con)
+
   #filter only the not null values
   cashflows <- cashflows[!unlist(lapply(cashflows,is.null))]
   #add the series as the name, payment date as date, and normalize the cashflow to 100, and add issue date
@@ -48,4 +52,4 @@ create_bonds <- function(bond_data) {
 create_all_bonds <- function(srch_name) {
   create_bonds(get_bond_data(srch_name)$cashflows)
 }
-  
+
