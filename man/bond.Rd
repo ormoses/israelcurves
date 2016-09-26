@@ -10,22 +10,22 @@ bond(dates, payments, face_value = 100, name = NULL, issue_date = NULL,
 \arguments{
 \item{dates}{A vector of payment dates}
 
+\item{payments}{A vector of payments (has to be same size as dates)}
+
 \item{face_value}{A number of the face value of the bond}
 
 \item{name}{(optional) The name of the bond}
 
 \item{issue_date}{(optional) The date the bond was issued}
 
-\item{type}{(optional) The type of the bond}
+\item{type}{(optional) A string represents the type of the bond}
 
-\item{known_CPI}{(optional) The known CPI value at the time of issue}
-
-\item{paymetns}{A vector of payments (has to be same size as dates)}
+\item{known_CPI}{(optional) A number represents the known CPI value at the time of issue of the bond}
 }
 \value{
 An object of class "bond"
 }
 \description{
-Add a bond object (class bond)
+\code{bond} is a helper function for building a bond class object.
 }
 
