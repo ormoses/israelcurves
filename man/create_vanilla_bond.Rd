@@ -39,4 +39,7 @@ An object of class "bond"
 using generic details instead of exact dates and payments. The bond is a vanilla one - with coupons
 and one principal payment at maturity.
 }
+\seealso{
+\code{\link{bond}}
+}
 

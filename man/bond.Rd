@@ -28,4 +28,7 @@ An object of class "bond"
 \description{
 \code{bond} is a helper function for building a bond class object.
 }
+\seealso{
+\code{\link{create_vanilla_bond}}
+}
 

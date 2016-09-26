@@ -10,6 +10,7 @@
 #' @param type (optional) A string represents the type of the bond
 #' @param known_CPI (optional) A number represents the known CPI value at the time of issue of the bond
 #' @return An object of class "bond"
+#' @seealso \code{\link{create_vanilla_bond}}
 #' @export
 # The class is a list of payment_dates (date), payments (numeric) that should be on the same length
 bond <- function(dates,payments,face_value=100,name=NULL,issue_date=NULL,type=NULL,known_CPI=NULL) {
@@ -48,6 +49,7 @@ bond <- function(dates,payments,face_value=100,name=NULL,issue_date=NULL,type=NU
 #' @param year_days A number. The number of days in each year.
 #' @inheritParams bond
 #' @return An object of class "bond"
+#' @seealso \code{\link{bond}}
 #' @export
 create_vanilla_bond <- function(issue_date,first_payment,term,coupon,name=NULL,eom=TRUE,
                                 payment_frequency=1,face_value=100,year_days=365,type=NULL,known_CPI=NULL) {
