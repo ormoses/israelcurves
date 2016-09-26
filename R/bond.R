@@ -30,9 +30,25 @@ bond <- function(dates,payments,face_value=100,name=NULL,issue_date=NULL,type=NU
   return(bond)
 }
 
-# Function that creates a vanilla bond
+
 # Payment frequency is the number of payments per year
 # Coupon is in percentage, term is in years
+
+#' Create vanilla bond object
+#'
+#' \code{create_vanilla_bond} is a simpler function than \code{\link{bond}}. It creates a bond object
+#' using generic details instead of exact dates and payments. The bond is a vanilla one - with coupons
+#' and one principal payment at maturity.
+#' @param issue_date A date. The issue date of the bond.
+#' @param first_payment A date. The date of the first coupon payment.
+#' @param term A number. The term of the bond in years.
+#' @param coupon A number. The coupon in percentage (for 5\% use 5)
+#' @param eom logical. A logical variable that indicates if the payments are at the end of each month.
+#' @param payment_frequency A number. The number of payments per year.
+#' @param year_days A number. The number of days in each year.
+#' @inheritParams bond
+#' @return An object of class "bond"
+#' @export
 create_vanilla_bond <- function(issue_date,first_payment,term,coupon,name=NULL,eom=TRUE,
                                 payment_frequency=1,face_value=100,year_days=365,type=NULL,known_CPI=NULL) {
   #Create the payment dates
