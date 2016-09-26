@@ -1,4 +1,14 @@
-# Function to define class - bond
+#' Add a bond object (class bond)
+#'
+#' @param dates A vector of payment dates
+#' @param paymetns A vector of payments (has to be same size as dates)
+#' @param face_value A number of the face value of the bond
+#' @param name (optional) The name of the bond
+#' @param issue_date (optional) The date the bond was issued
+#' @param type (optional) The type of the bond
+#' @param known_CPI (optional) The known CPI value at the time of issue
+#' @return An object of class "bond"
+#' @export
 # The class is a list of payment_dates (date), payments (numeric) that should be on the same length
 bond <- function(dates,payments,face_value=100,name=NULL,issue_date=NULL,type=NULL,known_CPI=NULL) {
   # Check that dates and payments are at the same length
