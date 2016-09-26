@@ -44,6 +44,7 @@ create_vanilla_bond <- function(issue_date,first_payment,term,coupon,name=NULL,e
   return(bond(dates=dates,payments=coupons,name=name,issue_date=issue_date,type=type,known_CPI=known_CPI))
 }
 
+#Summary method for bond class
 summary.bond <- function(bond) {
   cat("\n","Bond Summary:","\n\n")
   cat("A ",trimws(as.character(round(as.numeric(diff(range(bond$dates))/365),0))),
@@ -56,10 +57,31 @@ summary.bond <- function(bond) {
   print(data.frame(dates=bond$dates,payments=bond$payments))
 }
 
+#print method for bond class
 print.bond <- function(bond) {
   cat("Bond name: ",bond$name,"\n")
   cat("\n","Cash Flow:\n")
   print(data.frame(dates=bond$dates,payments=bond$payments))
+}
+
+#plot method for bond class
+plot.bond <- function(bond) {
+  nums <- length(bond$payments)
+  interest <- bond$payments
+  interest[nums] <- interest[nums]-bond$face_value
+  principal <- numeric(nums)
+  principal[nums] <- bond$face_value
+  bond_df <- data.frame(dates=bond$dates,interest=interest,principal=principal)
+  bond_df <- tidyr::gather(bond_df,key=type,value=total,-1)
+  bond_df$type <- factor(bond_df$type)
+  levels(bond_df$type) <- c("Interest","Principal")
+  total_df <- data.frame(dates=bond$dates,total=bond$payments)
+  ggplot2::ggplot()+geom_bar(aes(x=dates,y=total,fill=type),data=bond_df,stat="identity")+
+                    geom_text(size=4,data=total_df,aes(x=dates,y=total+3,label=round(total,2)))+
+                    theme_classic()+
+                    theme(legend.position="right",legend.title=element_blank())+
+                    scale_x_date(breaks=bond$dates)+
+                    labs(x="Payment Date",y="Payment")+ggtitle(paste0("Bond Cash Flow for bond: ",bond$name))
 }
 
 # a function that gets a list of bonds and returns a bond type by its name
@@ -68,4 +90,6 @@ bond_by_name <- function(bond_list,name) {
   bond <- bond_list[[num]]
   return(bond)
 }
+
+
 
