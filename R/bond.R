@@ -1,12 +1,14 @@
 #' Add a bond object (class bond)
 #'
+#' \code{bond} is a helper function for building a bond class object.
+#'
 #' @param dates A vector of payment dates
-#' @param paymetns A vector of payments (has to be same size as dates)
+#' @param payments A vector of payments (has to be same size as dates)
 #' @param face_value A number of the face value of the bond
 #' @param name (optional) The name of the bond
 #' @param issue_date (optional) The date the bond was issued
-#' @param type (optional) The type of the bond
-#' @param known_CPI (optional) The known CPI value at the time of issue
+#' @param type (optional) A string represents the type of the bond
+#' @param known_CPI (optional) A number represents the known CPI value at the time of issue of the bond
 #' @return An object of class "bond"
 #' @export
 # The class is a list of payment_dates (date), payments (numeric) that should be on the same length
