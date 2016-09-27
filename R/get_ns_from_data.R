@@ -24,7 +24,7 @@ make_params_for_all_dates <- function(bond_list,daily_data,min_obs=6,model="NS",
       result[count,"date"] <- calc_date
 
       # last calculation as initial guess
-      NS <- curve_ns(bond_list,market_data,calc_date,init_guess,adj_dur=adj_dur,adj_vol=adj_vol)
+      NS <- curve_model(bond_list,market_data,calc_date,init_guess,adj_dur=adj_dur,adj_vol=adj_vol)
       result[count,2:5] <- NS$pars
       result[count,6:7] <- range(data$term)
       result[count,8] <- nrow(data)
