@@ -17,6 +17,9 @@ bond <- function(dates,payments,face_value=100,name=NULL,issue_date=NULL,type=NU
   if (length(dates)!=length(payments)) {
     stop("dates and payments should be on the same length")
   }
+  # Check that all payments are positive
+  if (any(payments<=0)) stop("All payments must be positive")
+
   lastdate <- format(tail(dates,1),"%m%y")
   if (is.null(name)) {
     name <- lastdate
