@@ -41,6 +41,10 @@ curve_ns <- function(bonds_list,market_data,calc_date,init_guess=c(4,-4,-3,3),ad
 
     # if adj_vol==TRUE calculates total volume for simplicity in the calculations
     if (adj_vol==TRUE) {
+      if (!is.null(max_vol)) {
+        if (max_vol<=0) stop("max_vol must be positive")
+        bonds_data$trade_volume <- pmin(bonds_data$trade_volume,max_vol)
+      }
       total_vol <- sum(bonds_data$trade_volume)
     }
     # calculate cost function
