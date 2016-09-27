@@ -12,7 +12,6 @@
 #' @return An object of class "bond"
 #' @seealso \code{\link{create_vanilla_bond}}
 #' @export
-# The class is a list of payment_dates (date), payments (numeric) that should be on the same length
 bond <- function(dates,payments,face_value=100,name=NULL,issue_date=NULL,type=NULL,known_CPI=NULL) {
   # Check that dates and payments are at the same length
   if (length(dates)!=length(payments)) {
@@ -32,8 +31,6 @@ bond <- function(dates,payments,face_value=100,name=NULL,issue_date=NULL,type=NU
 }
 
 
-# Payment frequency is the number of payments per year
-# Coupon is in percentage, term is in years
 
 #' Create vanilla bond object
 #'
