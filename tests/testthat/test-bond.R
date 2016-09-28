@@ -17,7 +17,7 @@ test_that("cashflow with sorted dates is the same as bond with not sorted dates"
   CF1 <- c(5,5,5,5,105)
   dates2 <- dates1[ind2]
   CF2 <- CF1[ind2]
-  #bond1 - sorted dates bond, bond2 - unsorted dates bond
+  #dates1 - sorted dates bond, dates2 - unsorted dates bond
 
   expect_true(CF_equal(bond(dates1,CF1),bond(dates2,CF2)))
   expect_warning(bond(dates2,CF2))
