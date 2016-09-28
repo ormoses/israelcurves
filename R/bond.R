@@ -36,14 +36,11 @@ bond <- function(dates,payments,face_value=100,name=NULL,issue_date=NULL,type=NU
 
 
 
-  lastdate <- format(tail(dates,1),"%m%y")
+  lastdate <- format(dates[length(dates)],"%m%y")
   if (is.null(name)) {
     name <- lastdate
   }
-  methods::setClass("bond",representation =
-             list(name="character",dates="Date",payments="numeric",issue_date="Date",maturity="Date",
-                  face_value="numeric",type="character",known_CPI="numeric"))
-  bond <- list(name=name,dates=dates,payments=payments,issue_date=issue_date,maturity=tail(dates,1),
+  bond <- list(name=name,dates=dates,payments=payments,issue_date=issue_date,maturity=utils::tail(dates,1),
                face_value=face_value,type=type,known_CPI=known_CPI)
   class(bond) <- "bond"
   return(bond)
@@ -72,7 +69,7 @@ create_vanilla_bond <- function(issue_date,first_payment,term,coupon,name=NULL,e
   #Create the payment dates
   if (eom==TRUE) {
     dates <- c(issue_date,seq(
-      lubridate::update(first_payment,year=year(first_payment),month=month(first_payment)+1,mday=1),
+      lubridate::update(first_payment,year=lubridate::year(first_payment),month=lubridate::month(first_payment)+1,mday=1),
       by=paste0(12/payment_frequency," month"),length=term+1)-1)
   } else {
     dates <- c(issue_date,seq(first_payment,by=paste0(12/payment_frequency," month"),length=term+1))
@@ -122,12 +119,12 @@ plot.bond <- function(bond) {
   bond_df$type <- factor(bond_df$type)
   levels(bond_df$type) <- c("Interest","Principal")
   total_df <- data.frame(dates=bond$dates,total=bond$payments)
-  ggplot2::ggplot()+geom_bar(aes(x=dates,y=total,fill=type),data=bond_df,stat="identity")+
-                    geom_text(size=4,data=total_df,aes(x=dates,y=total+3,label=round(total,2)))+
-                    theme_classic()+
-                    theme(legend.position="right",legend.title=element_blank())+
-                    scale_x_date(breaks=bond$dates)+
-                    labs(x="Payment Date",y="Payment")+ggtitle(paste0("Bond Cash Flow for bond: ",bond$name))
+  ggplot2::ggplot()+ggplot2::geom_bar(aes(x=dates,y=total,fill=type),data=bond_df,stat="identity")+
+                    ggplot2::geom_text(size=4,data=total_df,aes(x=dates,y=total+3,label=round(total,2)))+
+                    ggplot2::theme_classic()+
+                    ggplot2::theme(legend.position="right",legend.title=element_blank())+
+                    ggplot2::scale_x_date(breaks=bond$dates)+
+                    ggplot2::labs(x="Payment Date",y="Payment")+ggplot2::ggtitle(paste0("Bond Cash Flow for bond: ",bond$name))
 }
 
 # a function that gets a list of bonds and returns a bond type by its name
