@@ -1,5 +1,13 @@
-#A fucntion that calculates yields for a vector of terms using a model
+#' Calculate a yield curve using a model
+#'
+#' A function that calculates yields for a vector of terms using a model (Nelson Siegel or Svensson)
+#' @param maturities a numeric vector of positive maturities
+#' @param params a numeric vector. The model parameters. A 4-length for Nelson Siegel (NS) model and a 6-length for Svensson (NSS).
+#' @param model A string indicating the model to use - "NS" for Nelson Siegel and "NSS" for Svensson.
+#' @return A numeric vector of yields matching each number in the maturities vector.
+#' @export
 calc_yields <- function(maturities,params,model="NS") {
+  if (any(maturities<0)) stop("maturities has to be positive")
   if (model=="NS") {
     if (length(params)!=4) stop("for NS model 4 parameters are expected")
     return(NS_yield(maturities,params))
@@ -10,7 +18,7 @@ calc_yields <- function(maturities,params,model="NS") {
 }
 
 
-# A function that calculates yields for a vector of terms using Nelson-Siegel (Diebold-Li)
+
 NS_yield <- function(maturities,beta) {
 #beta is a vector of the parameters b0,b1,b2 and lambda
 

@@ -40,7 +40,7 @@ bond <- function(dates,payments,face_value=100,name=NULL,issue_date=NULL,type=NU
   if (is.null(name)) {
     name <- lastdate
   }
-  bond <- list(name=name,dates=dates,payments=payments,issue_date=issue_date,maturity=utils::tail(dates,1),
+  bond <- list(name=name,dates=dates,payments=payments,issue_date=issue_date,maturity=tail(dates,1),
                face_value=face_value,type=type,known_CPI=known_CPI)
   class(bond) <- "bond"
   return(bond)
@@ -69,7 +69,7 @@ create_vanilla_bond <- function(issue_date,first_payment,term,coupon,name=NULL,e
   #Create the payment dates
   if (eom==TRUE) {
     dates <- c(issue_date,seq(
-      lubridate::update(first_payment,year=lubridate::year(first_payment),month=lubridate::month(first_payment)+1,mday=1),
+      update(first_payment,year=year(first_payment),month=month(first_payment)+1,mday=1),
       by=paste0(12/payment_frequency," month"),length=term+1)-1)
   } else {
     dates <- c(issue_date,seq(first_payment,by=paste0(12/payment_frequency," month"),length=term+1))
@@ -87,8 +87,11 @@ create_vanilla_bond <- function(issue_date,first_payment,term,coupon,name=NULL,e
   return(bond(dates=dates,payments=coupons,name=name,issue_date=issue_date,type=type,known_CPI=known_CPI))
 }
 
-#Summary method for bond class
-summary.bond <- function(bond) {
+#' Summary method for bond class
+#' @param object a bond object (class "bond").
+#' @param ... Additional parameters
+#' @export
+summary.bond <- function(object,...) {
   cat("\n","Bond Summary:","\n\n")
   cat("A ",trimws(as.character(round(as.numeric(diff(range(bond$dates))/365),0))),
       " years ",ifelse(is.null(bond$type),"",bond$type)," bond.\n")
@@ -100,15 +103,24 @@ summary.bond <- function(bond) {
   print(data.frame(dates=bond$dates,payments=bond$payments))
 }
 
-#print method for bond class
-print.bond <- function(bond) {
+#' Print method for bond class
+#' @param x a bond object (class "bond").
+#' @inheritParams summary.bond
+#' @export
+print.bond <- function(x,...) {
   cat("Bond name: ",bond$name,"\n")
   cat("\n","Cash Flow:\n")
   print(data.frame(dates=bond$dates,payments=bond$payments))
 }
 
-#plot method for bond class
-plot.bond <- function(bond) {
+#' Plot method for bond class
+#'
+#' Plot a cashflow of a bond.
+#' @param x,y a bond object (class "bond").
+#' @inheritParams summary.bond
+#' @importFrom ggplot2 ggplot geom_bar geom_text theme_classic theme scale_x_date labs ggtitle
+#' @export
+plot.bond <- function(x,y=NULL,...) {
   nums <- length(bond$payments)
   interest <- bond$payments
   interest[nums] <- interest[nums]-bond$face_value
@@ -119,15 +131,21 @@ plot.bond <- function(bond) {
   bond_df$type <- factor(bond_df$type)
   levels(bond_df$type) <- c("Interest","Principal")
   total_df <- data.frame(dates=bond$dates,total=bond$payments)
-  ggplot2::ggplot()+ggplot2::geom_bar(aes(x=dates,y=total,fill=type),data=bond_df,stat="identity")+
-                    ggplot2::geom_text(size=4,data=total_df,aes(x=dates,y=total+3,label=round(total,2)))+
-                    ggplot2::theme_classic()+
-                    ggplot2::theme(legend.position="right",legend.title=element_blank())+
-                    ggplot2::scale_x_date(breaks=bond$dates)+
-                    ggplot2::labs(x="Payment Date",y="Payment")+ggplot2::ggtitle(paste0("Bond Cash Flow for bond: ",bond$name))
+  ggplot()+geom_bar(aes(x=dates,y=total,fill=type),data=bond_df,stat="identity")+
+                    geom_text(size=4,data=total_df,aes(x=dates,y=total+3,label=round(total,2)))+
+                    theme_classic()+
+                    theme(legend.position="right",legend.title=element_blank())+
+                    scale_x_date(breaks=bond$dates)+
+                    labs(x="Payment Date",y="Payment")+ggtitle(paste0("Bond Cash Flow for bond: ",bond$name))
 }
 
-# a function that gets a list of bonds and returns a bond type by its name
+#' Extract bond by name
+#'
+#' A function that gets a list of bonds (bond class) and returns a bond object by its name.
+#' @param bond_list a list containing bond objects
+#' @param name A character contains the name of the bond.
+#' @return A bond class object
+#' @export
 bond_by_name <- function(bond_list,name) {
   num <- match(name,vapply(bond_list,function(x) x$name,character(1)))
   bond <- bond_list[[num]]

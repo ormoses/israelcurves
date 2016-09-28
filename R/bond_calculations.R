@@ -1,11 +1,20 @@
-# A functions for bonds calculations:
-# 1. Calculate yield to maturity
-# 2. Calculate Duration
-# 3. Calculation Convexity
-
-
-# A function that gets a bond, calculation date and the market price and
-# calculates the yield to maturity for the bond, the duration, modified duration and convexity
+#' Calculate main bond attributes
+#'
+#' A function that calculates 3 main attributes for a bond:
+#' \itemize{
+#'  \item Yield to Maturity (ytm)
+#'  \item Duration And modified duration
+#'  \item Convexity
+#' }
+#' @param thebond A bond object.
+#' @param calc_date A date. The calculation date.
+#' @param market_price A number. The price of the bond to calculate by.
+#' @param ex_day (optional) A number indicating the Ex-day in the month where the bond pays coupon.
+#' @inheritParams create_vanilla_bond
+#' @return A list with 4 items: yield to maturity, duration, modified duration and convexity
+#' @importFrom stats uniroot
+#' @seealso \code{\link{calc_bond_name}}
+#' @export
 calc_bond <- function(thebond,calc_date,market_price,ex_day=NULL,year_days=365) {
 
   #uses positive_CF to get the positive cash flow as of the discount date
@@ -16,7 +25,7 @@ calc_bond <- function(thebond,calc_date,market_price,ex_day=NULL,year_days=365) 
     sum(pos_CF$payments/((1+y)^(pos_CF$pos_terms)))-market_price
   }
   #calculate YTM
-  ytm <- (stats::uniroot(bond_CF,c(-0.03,0.15),tol=0.000001)$root)
+  ytm <- (uniroot(bond_CF,c(-0.03,0.15),tol=0.000001)$root)
   #calculate duration
   dur <- sum((pos_CF$pos_terms*pos_CF$payments)/((1+ytm)^(pos_CF$pos_terms)))/market_price
   #calculate modified duration
@@ -26,11 +35,19 @@ calc_bond <- function(thebond,calc_date,market_price,ex_day=NULL,year_days=365) 
   return(list(ytm=ytm,duration=dur,mod_duration=mod_dur,covexity=conv))
 }
 
-
-# a function that gets a list of bonds, name of bond, date and market price and calculates duration
-calc_dur_name <- function(bonds_list,bond_name,calc_date,market_price,ex_day=NULL,year_days=365) {
+#' Calculate bond attributes by name
+#'
+#' A function that calculates the bond attributes from \code{\link{calc_bond}} by bonds' name.
+#' The function gets a list of bonds, name of bond, date and market price and calculates the attributes.
+#' @param bonds_list a list containing bond objects
+#' @param bond_name a string. The name of the bond.
+#' @inheritParams calc_bond
+#' @return A list with 4 items: yield to maturity, duration, modified duration and convexity
+#' @seealso \code{\link{calc_bond}}
+#' @export
+calc_bond_name <- function(bonds_list,bond_name,calc_date,market_price,ex_day=NULL,year_days=365) {
   thebond <- bond_by_name(bonds_list,bond_name)
-  calc_bond(thebond,calc_date,market_price,ex_day,year_days)$duration
+  calc_bond(thebond,calc_date,market_price,ex_day,year_days)
 }
 
 

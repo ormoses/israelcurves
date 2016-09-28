@@ -1,4 +1,9 @@
-#Code to get the data from the bloomberg SRCH using bsrch function (a custom SRCH needed to be saved)
+#' Get SRCH data from bloomberg
+#'
+#' Code to get the data from the bloomberg SRCH using bsrch function (a custom SRCH needed to be saved)
+#' @param srch_name A string. A bloomberg saved SRCH name.
+#' @importFrom dplyr mutate arrange filter %>%
+#' @export
 get_bond_data <- function(srch_name) {
   #Connect to bloomberg
   con <- Rblpapi::blpConnect()
@@ -8,8 +13,8 @@ get_bond_data <- function(srch_name) {
   #get bonds main data
   bond_data <- x %>%
   Rblpapi::bdp(c("SECURITY_NAME","ISSUE_DT","CPN","MATURITY","FIRST_CPN_DT","SERIES","ID_BB")) %>%
-  dplyr::mutate(ID_BB=paste0(substr(ID_BB, 1, nchar(ID_BB)-1)," Corp")) %>%
-  dplyr::arrange(MATURITY)
+  mutate(ID_BB=paste0(substr(ID_BB, 1, nchar(ID_BB)-1)," Corp")) %>%
+  arrange(MATURITY)
 
   #get bonds' cashflows
   ovrd <- c("USER_LOCAL_TRADE_DATE"="19900101")

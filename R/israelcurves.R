@@ -9,4 +9,6 @@
 #'
 #' @docType package
 #' @name israelcurves
+#' @import lubridate
+#' @importFrom utils head tail
 NULL

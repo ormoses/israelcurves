@@ -11,11 +11,10 @@ LazyData: TRUE
 Imports:
     ggplot2,
     Rblpapi,
-    lubridate,
     dplyr,
     Rsolnp,
-    tidyr,
-    methods,
-    magrittr
+    tidyr
+Depends:
+    lubridate
 RoxygenNote: 5.0.1
 Suggests: testthat
