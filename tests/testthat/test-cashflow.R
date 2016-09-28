@@ -1,4 +1,3 @@
-library(israelcurves)
 context("bond cashflow at a current date")
 
 #build a bond to work with
