@@ -9,7 +9,15 @@ get_bond_data(srch_name)
 \arguments{
 \item{srch_name}{A string. A bloomberg saved SRCH name.}
 }
+\value{
+a list containing 2 items:
+\enumerate{
+   \item A dataframe contains the bonds main data
+   \item A list where each item is a bond's cashflow (normalized to 100)
+ }
+}
 \description{
 Code to get the data from the bloomberg SRCH using bsrch function (a custom SRCH needed to be saved)
+The code gets the main attributes of each bonnd found in the search as well as each bond's cashflow.
 }
 
