@@ -13,18 +13,34 @@
 #' @seealso \code{\link{create_vanilla_bond}}
 #' @export
 bond <- function(dates,payments,face_value=100,name=NULL,issue_date=NULL,type=NULL,known_CPI=NULL) {
-  # Check that dates and payments are at the same length
-  if (length(dates)!=length(payments)) {
-    stop("dates and payments should be on the same length")
-  }
-  # Check that all payments are positive
-  if (any(payments<=0)) stop("All payments must be positive")
+  #As this is the main building block of the package we'll check the input thoroughly
+
+    #Check that dates and payments are not NULL and not NA
+    if ((sum(is.na(dates)) + sum(is.na(payments))) > 0) stop("dates and payments cannot have NA values")
+    if ((is.null(dates)) | (is.null(payments))) stop("dates and payments have to have values")
+
+    # Check that dates and payments are at the same length
+    if (length(dates)!=length(payments)) {
+      stop("dates and payments should be on the same length")
+    }
+    # Check that all payments are positive
+    if (any(payments<=0)) stop("All payments must be positive")
+
+    #If dates are not sorted - sort them and throw a warning
+    if (!isTRUE(all.equal(dates,sort(dates)))) {
+      warning("Dates input are not sorted, the function will sort them.")
+      ord <- order(dates)
+      dates <- dates[ord]
+      payments <- payments[ord]
+    }
+
+
 
   lastdate <- format(tail(dates,1),"%m%y")
   if (is.null(name)) {
     name <- lastdate
   }
-  setClass("bond",representation =
+  methods::setClass("bond",representation =
              list(name="character",dates="Date",payments="numeric",issue_date="Date",maturity="Date",
                   face_value="numeric",type="character",known_CPI="numeric"))
   bond <- list(name=name,dates=dates,payments=payments,issue_date=issue_date,maturity=tail(dates,1),
