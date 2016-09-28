@@ -1,6 +1,15 @@
-# A function that gets a bond, discount_date and a vector of rates to discount and returns the bond's price
-# as of the discount date
-require(lubridate)
+#' Price a bond
+#'
+#'
+#' A function that gets a bond, discount_date and a vector of rates to discount and returns the bond's price
+#' as of the discount date
+#' @param thebond A bond object
+#' @param disc_date The discount date
+#' @param rates A numeric vector of the discount rates corresponding to the payment dates
+#' @inheritParams calc_bond
+#' @return The price of the bond for the discount date (numeric)
+#' @seealso \code{\link{price_bond_model}} to price a bond using a model calculated discount rates.
+#' @export
 
 price_bond <- function(thebond,disc_date,rates,ex_day=NULL,year_days=365) {
 
@@ -17,7 +26,15 @@ price_bond <- function(thebond,disc_date,rates,ex_day=NULL,year_days=365) {
   return(res)
 }
 
-# A function to price a bond using a model
+#' Price a bond using rates from a model
+#'
+#' A function that prices a bond using a discount rates calculated from a model: Nelson Siegel or Svensson.
+#' @param model A string indicating the model to use - "NS" for Nelson Siegel and "NSS" for Svensson.
+#' @param model_params a numeric vector indicates the model parameters.
+#' A 4-length for Nelson Siegel (NS) model and a 6-length for Svensson (NSS).
+#' @inheritParams price_bond
+#' @seealso \code{\link{price_bond}} to price a bond using a manual vector of discount rates.
+#' @export
 price_bond_model <- function(thebond,disc_date,model,model_params,ex_day=NULL,year_days=365) {
 
   #uses positive_CF to get the positive cash flow as of the discount date
@@ -30,8 +47,8 @@ price_bond_model <- function(thebond,disc_date,model,model_params,ex_day=NULL,ye
   return(res)
 }
 
-#Helper function that gets a bond and a date and returns a list
-#With the positive terms and payments
+# Helper function that gets a bond and a date and returns a list
+# With the positive terms and payments
 # there is an option to add the day of the Ex-date and it will calculate it from this date
 positive_CF <- function(thebond,thedate,ex_day=NULL,year_days=365) {
 

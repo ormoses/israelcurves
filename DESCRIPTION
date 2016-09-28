@@ -13,8 +13,7 @@ Imports:
     Rblpapi,
     dplyr,
     Rsolnp,
-    tidyr
-Depends:
+    tidyr,
     lubridate
 RoxygenNote: 5.0.1
 Suggests: testthat

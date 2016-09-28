@@ -40,10 +40,10 @@ bond <- function(dates,payments,face_value=100,name=NULL,issue_date=NULL,type=NU
   if (is.null(name)) {
     name <- lastdate
   }
-  bond <- list(name=name,dates=dates,payments=payments,issue_date=issue_date,maturity=tail(dates,1),
+  thebond <- list(name=name,dates=dates,payments=payments,issue_date=issue_date,maturity=tail(dates,1),
                face_value=face_value,type=type,known_CPI=known_CPI)
-  class(bond) <- "bond"
-  return(bond)
+  class(thebond) <- "bond"
+  return(thebond)
 }
 
 
@@ -69,7 +69,7 @@ create_vanilla_bond <- function(issue_date,first_payment,term,coupon,name=NULL,e
   #Create the payment dates
   if (eom==TRUE) {
     dates <- c(issue_date,seq(
-      update(first_payment,year=year(first_payment),month=month(first_payment)+1,mday=1),
+      ymd(paste(year(first_payment),(month(first_payment)%% 12)+1,1,sep="-")),
       by=paste0(12/payment_frequency," month"),length=term+1)-1)
   } else {
     dates <- c(issue_date,seq(first_payment,by=paste0(12/payment_frequency," month"),length=term+1))
@@ -93,14 +93,14 @@ create_vanilla_bond <- function(issue_date,first_payment,term,coupon,name=NULL,e
 #' @export
 summary.bond <- function(object,...) {
   cat("\n","Bond Summary:","\n\n")
-  cat("A ",trimws(as.character(round(as.numeric(diff(range(bond$dates))/365),0))),
-      " years ",ifelse(is.null(bond$type),"",bond$type)," bond.\n")
-  cat("Bond name: ",bond$name,"\n")
-  cat("Issue Date: ",format(bond$issue_date,"%d/%m/%Y"),"\n")
-  cat("Maturity: ",format(bond$maturity,"%d/%m/%Y"),"\n")
-  cat("Face Value: ",bond$face_value,"\n")
+  cat("A ",trimws(as.character(round(as.numeric(diff(range(object$dates))/365),0))),
+      " years ",ifelse(is.null(object$type),"",object$type)," bond.\n")
+  cat("Bond name: ",object$name,"\n")
+  cat("Issue Date: ",format(object$issue_date,"%d/%m/%Y"),"\n")
+  cat("Maturity: ",format(object$maturity,"%d/%m/%Y"),"\n")
+  cat("Face Value: ",object$face_value,"\n")
   cat("\n","Cash Flow:\n")
-  print(data.frame(dates=bond$dates,payments=bond$payments))
+  print(data.frame(dates=object$dates,payments=object$payments))
 }
 
 #' Print method for bond class
@@ -108,9 +108,9 @@ summary.bond <- function(object,...) {
 #' @inheritParams summary.bond
 #' @export
 print.bond <- function(x,...) {
-  cat("Bond name: ",bond$name,"\n")
+  cat("Bond name: ",x$name,"\n")
   cat("\n","Cash Flow:\n")
-  print(data.frame(dates=bond$dates,payments=bond$payments))
+  print(data.frame(dates=x$dates,payments=x$payments))
 }
 
 #' Plot method for bond class
@@ -121,22 +121,22 @@ print.bond <- function(x,...) {
 #' @importFrom ggplot2 ggplot geom_bar geom_text theme_classic theme scale_x_date labs ggtitle
 #' @export
 plot.bond <- function(x,y=NULL,...) {
-  nums <- length(bond$payments)
-  interest <- bond$payments
-  interest[nums] <- interest[nums]-bond$face_value
+  nums <- length(x$payments)
+  interest <- x$payments
+  interest[nums] <- interest[nums]-x$face_value
   principal <- numeric(nums)
-  principal[nums] <- bond$face_value
-  bond_df <- data.frame(dates=bond$dates,interest=interest,principal=principal)
+  principal[nums] <- x$face_value
+  bond_df <- data.frame(dates=x$dates,interest=interest,principal=principal)
   bond_df <- tidyr::gather(bond_df,key=type,value=total,-1)
   bond_df$type <- factor(bond_df$type)
   levels(bond_df$type) <- c("Interest","Principal")
-  total_df <- data.frame(dates=bond$dates,total=bond$payments)
+  total_df <- data.frame(dates=x$dates,total=x$payments)
   ggplot()+geom_bar(aes(x=dates,y=total,fill=type),data=bond_df,stat="identity")+
                     geom_text(size=4,data=total_df,aes(x=dates,y=total+3,label=round(total,2)))+
                     theme_classic()+
                     theme(legend.position="right",legend.title=element_blank())+
-                    scale_x_date(breaks=bond$dates)+
-                    labs(x="Payment Date",y="Payment")+ggtitle(paste0("Bond Cash Flow for bond: ",bond$name))
+                    scale_x_date(breaks=x$dates)+
+                    labs(x="Payment Date",y="Payment")+ggtitle(paste0("Bond Cash Flow for bond: ",x$name))
 }
 
 #' Extract bond by name

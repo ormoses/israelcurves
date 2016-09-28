@@ -1,7 +1,13 @@
 #' Get SRCH data from bloomberg
 #'
 #' Code to get the data from the bloomberg SRCH using bsrch function (a custom SRCH needed to be saved)
+#' The code gets the main attributes of each bonnd found in the search as well as each bond's cashflow.
 #' @param srch_name A string. A bloomberg saved SRCH name.
+#' @return a list containing 2 items:
+#' \enumerate{
+#'    \item A dataframe contains the bonds main data
+#'    \item A list where each item is a bond's cashflow (normalized to 100)
+#'  }
 #' @importFrom dplyr mutate arrange filter %>%
 #' @export
 get_bond_data <- function(srch_name) {
@@ -41,19 +47,43 @@ get_bond_data <- function(srch_name) {
 }
 
 
-#Code to convert the bloomberg data into bond class
-create_bond_from_data <- function(bond_data,n) {
-  x <- bond_data[[n]]
+#' Convert the bloomberg data into bond class
+#
+#' A function that takes a list of bonds' cashflow and an item number and creates a bond object
+#' from the matching item in the list.
+#' @param bond_cf a list. A list of bond cashflows created by \code{\link{get_bond_data}}.
+#' @param n A number indicates the item from the list to create bond from.
+#' @return a bond object
+#' @seealso \code{\link{get_bond_data}} for getting the data from Bloomberg.
+#' @export
+
+create_bond_from_data <- function(bond_cf,n) {
+  x <- bond_cf[[n]]
  bond(dates=x$dates,payments=x$payments,name=x$name,issue_date=x$issue_date)
 }
 
-#Create a list of bonds from the bloomberg data
-create_bonds <- function(bond_data) {
-  bonds <- Map(create_bond_from_data,seq_along(bond_data),MoreArgs=list(bond_data=bond_data))
+#' Create a list of bond objects from the bloomberg data
+#'
+#' A function that takes a list of bonds' cashflows and creates a list of bond objects
+#' @inheritParams create_bond_from_data
+#' @return a list of bond objects
+#' @seealso \code{\link{get_bond_data}} for getting the data from Bloomberg,
+#'  \code{\link{create_bond_from_data}} for creating one bond.
+#' @export
+create_bonds <- function(bond_cf) {
+  bonds <- Map(create_bond_from_data,seq_along(bond_cf),MoreArgs=list(bond_cf=bond_cf))
   return(bonds)
 }
 
-#A function to create bonds_list using the functions above
+#' Create a list of bond objects using Bloomberg SRCH
+#'
+#' A function that takes a Bloomberg save SRCH and creates a list of bond objects from this search.
+#' @inheritParams get_bond_data
+#' @return a list of bond objects
+#' @seealso \code{\link{get_bond_data}} for getting the data from Bloomberg,
+#'  \code{\link{create_bond_from_data}} for creating one bond and \code{\link{create_bonds}} for creating a list of bonds.
+#' @export
+#'
 create_all_bonds <- function(srch_name) {
   create_bonds(get_bond_data(srch_name)$cashflows)
 }
