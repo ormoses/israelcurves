@@ -1,6 +1,6 @@
 #Split the data by name and get the NS
 
-make_params_for_all_dates <- function(bond_list,daily_data,min_obs=6,model="NS",adj_dur=TRUE,adj_vol=FALSE) {
+make_params_for_all_dates <- function(bond_list,daily_data,min_obs=6,model="NS",adj_dur=TRUE,adj_vol=FALSE,max_vol=NULL) {
   #define initial guess for the NS
   init_guess=c(4,-4,-3,3)
 
@@ -24,7 +24,8 @@ make_params_for_all_dates <- function(bond_list,daily_data,min_obs=6,model="NS",
       result[count,"date"] <- calc_date
 
       # last calculation as initial guess
-      NS <- curve_model(bond_list,market_data,calc_date,init_guess,adj_dur=adj_dur,adj_vol=adj_vol)
+      NS <- curve_model(bond_list,market_data,calc_date,model=model,init_guess=init_guess,
+                        adj_dur=adj_dur,adj_vol=adj_vol,max_vol=max_vol)
       result[count,2:5] <- NS$pars
       result[count,6:7] <- range(data$term)
       result[count,8] <- nrow(data)
