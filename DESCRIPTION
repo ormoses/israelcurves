@@ -6,7 +6,7 @@ Author: Or Moses
 Author@R: person("Or","Moses",email="or.moses@gmail.com",role=c("aut","cre"))
 Maintainer: Or Moses <or.moses@gmail.com>
 Description: Functions to calculate historical yield curves for the Israeli sovereign bond market. The calculation uses the Nelson-Siegel and Svensson models.
-License: What license is it under?
+License: GPL-3
 LazyData: TRUE
 Imports:
     ggplot2,
@@ -15,6 +15,7 @@ Imports:
     dplyr,
     Rsolnp,
     tidyr,
-    methods
+    methods,
+    magrittr
 RoxygenNote: 5.0.1
 Suggests: testthat
