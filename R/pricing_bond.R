@@ -52,6 +52,12 @@ price_bond_model <- function(thebond,disc_date,model,model_params,ex_day=NULL,ye
 # there is an option to add the day of the Ex-date and it will calculate it from this date
 positive_CF <- function(thebond,thedate,ex_day=NULL,year_days=365) {
 
+  #checks that thedate >= issue_date
+  if (thedate<thebond$issue_date) stop("the calculation date has to be after the issue date")
+
+  #check that thedate < maturity date
+  if (thedate>=bond1$maturity) stop("the calculation date has to be before the maturity of the bond")
+
   #Computes the time to maturity from the discount date
   terms <- as.numeric((thebond$dates-thedate)/year_days)
 
