@@ -6,6 +6,7 @@
 # a "market_price" column and optionally a "trade_volume" column.
 
 curve_model <- function(bonds_list,market_data,calc_date,model="NS",init_guess=NULL,adj_dur=TRUE,adj_vol=FALSE,max_vol=NULL) {
+
   #how many parameters the model has and what are the bounds
   if (model=="NS") {
     num_model <- 4
@@ -34,8 +35,8 @@ curve_model <- function(bonds_list,market_data,calc_date,model="NS",init_guess=N
   init_guesses <- matrix(0,nrow=4,ncol=num_model)
   init_guesses[1,] <- init_guess
   init_guesses[2,] <- init_def
-  init_guesses[3,] <- runif(num_model,min=LB,max=UB)
-  init_guesses[4,] <- runif(num_model,min=LB_narrow,max=UB_narrow)
+  init_guesses[3,] <- stats::runif(num_model,min=LB,max=UB)
+  init_guesses[4,] <- stats::runif(num_model,min=LB_narrow,max=UB_narrow)
 
   #if adj_dur==TRUE adds duration column to market_data
   if (adj_dur==TRUE) {
