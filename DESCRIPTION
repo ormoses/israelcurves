@@ -2,17 +2,19 @@ Package: israelcurves
 Type: Package
 Title: Calculates historical curves for the Israeli sovereign bond market
 Version: 0.1.0
+Author: Or Moses
 Author@R: person("Or","Moses",email="or.moses@gmail.com",role=c("aut","cre"))
 Maintainer: Or Moses <or.moses@gmail.com>
 Description: Functions to calculate historical yield curves for the Israeli sovereign bond market. The calculation uses the Nelson-Siegel and Svensson models.
 License: What license is it under?
 LazyData: TRUE
 Imports:
-    tidyverse,
+    ggplot2,
     Rblpapi,
     lubridate,
     dplyr,
     Rsolnp,
-    tidyr
+    tidyr,
+    methods
 RoxygenNote: 5.0.1
 Suggests: testthat
