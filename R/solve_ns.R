@@ -1,9 +1,24 @@
-# Functions to create a Nelson Siegel interpolation zero curve
-# using a bonds list, market prices and optionaly trade volumes.
-
-# the function accepts a list of bonds (bond class), a data frame of market data and a calculation date.
-# the market data should have a "name" column that has names from the bonds list,
-# a "market_price" column and optionally a "trade_volume" column.
+#' Calculate a zero yield curve using a model for a certain day
+#'
+#' create a Nelson Siegel or Svensson interpolation zero curve using a bonds list, market prices and optionaly trade volumes
+#' for a certain date. The optimization is done using Rsolnp package.
+#' The basic cost function is:
+#' \deqn{(P_{market}-P_{model})^{2}}
+#' Duration adjusted equation is:
+#' \deqn{\frac{(P_{market}-P_{model})^{2}}{Duration}}
+#' Volume Adjusted equation is:
+#' \deqn{{(P_{market}-P_{model})^{2}}\cdot{\frac{Volume}{Total Volume}}}
+#' With both adjustment the equation is:
+#' \deqn{\frac{(P_{market}-P_{model})^{2}}{Duration}\cdot{\frac{Volume}{Total Volume}}}
+#' @param bonds_list a list of bond objects
+#' @param market_data A dataframe. The known daily market data for the calculation date.
+#' The dataframe should have a "name" column that has names from the bonds list, a "market_price" column
+#' and optionally a "trade_volume" column.
+#' @param calc_date The calculation date.
+#' @param init_guess the initial guess for the optimization algorithm.
+#' @inheritParams make_params_for_all_dates
+#' @return A vector of model parameters after optimization.
+#' @export
 
 curve_model <- function(bonds_list,market_data,calc_date,model="NS",init_guess=NULL,adj_dur=TRUE,adj_vol=FALSE,max_vol=NULL) {
 
