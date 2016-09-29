@@ -10,6 +10,7 @@
 #' @param adj_dur A logical indicates weather the calculation should be duration adjusted.
 #' @param adj_vol A logical indicates weather the calculation should be volume adjusted.
 #' @param max_vol A numeric indicates a maximal trade volume to be considered when calculating the volume adjustment for each bond.
+#' @param Ex_day An integer indicating the Ex day of the month when a coupon payment occurs.
 #' @return a list containing:
 #' \enumerate{
 #'  \item model name (string)
@@ -20,7 +21,7 @@
 #'  }
 #' @importFrom dplyr filter select
 #' @export
-make_params_for_all_dates <- function(bond_list,daily_data,min_obs=6,model="NS",adj_dur=TRUE,adj_vol=FALSE,max_vol=NULL) {
+make_params_for_all_dates <- function(bond_list,daily_data,min_obs=6,model="NS",adj_dur=TRUE,adj_vol=FALSE,max_vol=NULL,ex_day=NULL) {
   #define initial guess for the model and define a blank dataframe for the results
   if (model=="NS") {
     init_guess <- c(4,-4,-3,3)
@@ -52,7 +53,7 @@ make_params_for_all_dates <- function(bond_list,daily_data,min_obs=6,model="NS",
 
       # last calculation as initial guess
       model_result <- curve_model(bond_list,market_data,calc_date,model=model,init_guess=init_guess,
-                        adj_dur=adj_dur,adj_vol=adj_vol,max_vol=max_vol)
+                        adj_dur=adj_dur,adj_vol=adj_vol,max_vol=max_vol,ex_day)
       result[count,2:(2+num_model-1)] <- model_result$pars
       result[count,(2+num_model):(2+num_model+1)] <- range(data$term)
       result[count,(2+num_model+2)] <- nrow(data)
