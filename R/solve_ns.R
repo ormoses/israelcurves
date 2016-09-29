@@ -20,7 +20,7 @@
 #' @return A vector of model parameters after optimization.
 #' @export
 
-curve_model <- function(bonds_list,market_data,calc_date,model="NS",init_guess=NULL,adj_dur=TRUE,adj_vol=FALSE,max_vol=NULL) {
+curve_model <- function(bonds_list,market_data,calc_date,model="NS",init_guess=NULL,adj_dur=TRUE,adj_vol=FALSE,max_vol=NULL,ex_day=NULL) {
 
   #how many parameters the model has and what are the bounds
   if (model=="NS") {
@@ -69,7 +69,7 @@ curve_model <- function(bonds_list,market_data,calc_date,model="NS",init_guess=N
 
   cost_func <- function(init_guess) {
     #get the model prices of the bond using the current guess
-    bonds_model_prices <- vapply(bonds_list,function(x) price_bond_model(x,calc_date,model=model,model_params=init_guess),numeric(1))
+    bonds_model_prices <- vapply(bonds_list,function(x) price_bond_model(x,calc_date,model=model,model_params=init_guess,ex_day = ex_day),numeric(1))
     model_bonds <- data.frame(name=act_names,model_price=bonds_model_prices)
     # merge both
     bonds_data <- merge(model_bonds,market_data)
