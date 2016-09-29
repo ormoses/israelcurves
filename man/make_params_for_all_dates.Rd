@@ -5,7 +5,7 @@
 \title{Compute daily curves from data}
 \usage{
 make_params_for_all_dates(bond_list, daily_data, min_obs = 6, model = "NS",
-  adj_dur = TRUE, adj_vol = FALSE, max_vol = NULL)
+  adj_dur = TRUE, adj_vol = FALSE, max_vol = NULL, ex_day = NULL)
 }
 \arguments{
 \item{bond_list}{a list of bond objects}
@@ -15,13 +15,15 @@ and can be extracted from Bloomberg using \code{\link{get_daily_data}}.}
 
 \item{min_obs}{an integer. The minimal number of bond's price observation in order to compute a curve for a certain date.}
 
-\item{model}{A string indicating the model to use - "NS" for Nelson Siegel and "NSS" for Svensson.}
+\item{model}{A string indicating the model to use - 'NS' for Nelson Siegel and 'NSS' for Svensson.}
 
 \item{adj_dur}{A logical indicates weather the calculation should be duration adjusted.}
 
 \item{adj_vol}{A logical indicates weather the calculation should be volume adjusted.}
 
 \item{max_vol}{A numeric indicates a maximal trade volume to be considered when calculating the volume adjustment for each bond.}
+
+\item{ex_day}{An integer indicating the Ex day of the month when a coupon payment occurs.}
 }
 \value{
 a list containing:
@@ -34,7 +36,7 @@ a list containing:
  }
 }
 \description{
-Split the daily data by date and compute a curve for each day using a chosen \code{model} ("NS"/"NSS" for Nelson Siegel
+Split the daily data by date and compute a curve for each day using a chosen \code{model} ('NS'/'NSS' for Nelson Siegel
 and Svensson)
 }
 

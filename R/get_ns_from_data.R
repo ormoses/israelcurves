@@ -10,7 +10,7 @@
 #' @param adj_dur A logical indicates weather the calculation should be duration adjusted.
 #' @param adj_vol A logical indicates weather the calculation should be volume adjusted.
 #' @param max_vol A numeric indicates a maximal trade volume to be considered when calculating the volume adjustment for each bond.
-#' @param Ex_day An integer indicating the Ex day of the month when a coupon payment occurs.
+#' @param ex_day An integer indicating the Ex day of the month when a coupon payment occurs.
 #' @return a list containing:
 #' \enumerate{
 #'  \item model name (string)

@@ -11,7 +11,7 @@ calc_yields(maturities, params, model = "NS")
 
 \item{params}{a numeric vector. The model parameters. A 4-length for Nelson Siegel (NS) model and a 6-length for Svensson (NSS).}
 
-\item{model}{A string indicating the model to use - "NS" for Nelson Siegel and "NSS" for Svensson.}
+\item{model}{A string indicating the model to use - 'NS' for Nelson Siegel and 'NSS' for Svensson.}
 }
 \value{
 A numeric vector of yields matching each number in the maturities vector.

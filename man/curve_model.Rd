@@ -5,18 +5,19 @@
 \title{Calculate a zero yield curve using a model for a certain day}
 \usage{
 curve_model(bonds_list, market_data, calc_date, model = "NS",
-  init_guess = NULL, adj_dur = TRUE, adj_vol = FALSE, max_vol = NULL)
+  init_guess = NULL, adj_dur = TRUE, adj_vol = FALSE, max_vol = NULL,
+  ex_day = NULL)
 }
 \arguments{
 \item{bonds_list}{a list of bond objects}
 
 \item{market_data}{A dataframe. The known daily market data for the calculation date.
-The dataframe should have a "name" column that has names from the bonds list, a "market_price" column
-and optionally a "trade_volume" column.}
+The dataframe should have a 'name' column that has names from the bonds list, a 'market_price' column
+and optionally a 'trade_volume' column.}
 
 \item{calc_date}{The calculation date.}
 
-\item{model}{A string indicating the model to use - "NS" for Nelson Siegel and "NSS" for Svensson.}
+\item{model}{A string indicating the model to use - 'NS' for Nelson Siegel and 'NSS' for Svensson.}
 
 \item{init_guess}{the initial guess for the optimization algorithm.}
 
@@ -25,6 +26,8 @@ and optionally a "trade_volume" column.}
 \item{adj_vol}{A logical indicates weather the calculation should be volume adjusted.}
 
 \item{max_vol}{A numeric indicates a maximal trade volume to be considered when calculating the volume adjustment for each bond.}
+
+\item{ex_day}{An integer indicating the Ex day of the month when a coupon payment occurs.}
 }
 \value{
 A vector of model parameters after optimization.

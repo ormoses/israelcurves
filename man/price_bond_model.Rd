@@ -12,7 +12,7 @@ price_bond_model(thebond, disc_date, model, model_params, ex_day = NULL,
 
 \item{disc_date}{The discount date}
 
-\item{model}{A string indicating the model to use - "NS" for Nelson Siegel and "NSS" for Svensson.}
+\item{model}{A string indicating the model to use - 'NS' for Nelson Siegel and 'NSS' for Svensson.}
 
 \item{model_params}{a numeric vector indicates the model parameters.
 A 4-length for Nelson Siegel (NS) model and a 6-length for Svensson (NSS).}
