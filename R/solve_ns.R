@@ -12,14 +12,13 @@
 #' \deqn{\frac{(P_{market}-P_{model})^{2}}{Duration}\cdot{\frac{Volume}{Total Volume}}}
 #' @param bonds_list a list of bond objects
 #' @param market_data A dataframe. The known daily market data for the calculation date.
-#' The dataframe should have a "name" column that has names from the bonds list, a "market_price" column
-#' and optionally a "trade_volume" column.
+#' The dataframe should have a 'name' column that has names from the bonds list, a 'market_price' column
+#' and optionally a 'trade_volume' column.
 #' @param calc_date The calculation date.
 #' @param init_guess the initial guess for the optimization algorithm.
 #' @inheritParams make_params_for_all_dates
 #' @return A vector of model parameters after optimization.
 #' @export
-
 curve_model <- function(bonds_list,market_data,calc_date,model="NS",init_guess=NULL,adj_dur=TRUE,adj_vol=FALSE,max_vol=NULL,ex_day=NULL) {
 
   #how many parameters the model has and what are the bounds
@@ -82,27 +81,27 @@ curve_model <- function(bonds_list,market_data,calc_date,model="NS",init_guess=N
       }
       total_vol <- sum(bonds_data$trade_volume)
     }
-    # calculate cost function
-    if(adj_dur==FALSE && adj_vol==FALSE) {
-      #without adjustments only take sum of squares of differences
-      cost <- sum((bonds_data$model_price-bonds_data$market_price)^2)
-      # Adjust to duration
-    } else if (adj_dur==TRUE && adj_vol==FALSE) {
-      cost <- sum(((bonds_data$model_price-bonds_data$market_price)/(bonds_data$duration))^2)
-      # Adjust to volume
-    } else if (adj_dur==FALSE && adj_vol==TRUE) {
-      cost <- sum(((bonds_data$model_price-bonds_data$market_price)*(bonds_data$trade_volume/total_vol))^2)
-      # Adjust both duration and volume
-    } else if (adj_dur==TRUE && adj_vol==TRUE) {
-      cost <- sum(((bonds_data$model_price-bonds_data$market_price)*(bonds_data$trade_volume/total_vol)/(bonds_data$duration))^2)
+        # calculate cost function
+        if (adj_dur == FALSE && adj_vol == FALSE) {
+            # without adjustments only take sum of squares of differences
+            cost <- sum((bonds_data$model_price - bonds_data$market_price)^2)
+            # Adjust to duration
+        } else if (adj_dur == TRUE && adj_vol == FALSE) {
+            cost <- sum(((bonds_data$model_price - bonds_data$market_price)/(bonds_data$duration))^2)
+            # Adjust to volume
+        } else if (adj_dur == FALSE && adj_vol == TRUE) {
+            cost <- sum(((bonds_data$model_price - bonds_data$market_price) * (bonds_data$trade_volume/total_vol))^2)
+            # Adjust both duration and volume
+        } else if (adj_dur == TRUE && adj_vol == TRUE) {
+            cost <- sum(((bonds_data$model_price - bonds_data$market_price) * (bonds_data$trade_volume/total_vol)/(bonds_data$duration))^2)
+        }
+        return(cost)
     }
-    return(cost)
-  }
-  sols <- list()
-  for (i in 1:4) {
-    sols[[i]] <- Rsolnp::solnp(init_guesses[i,],cost_func,LB=LB,UB=UB)
-  }
-  return(sols[[which.min(vapply(sols,function(x) min(x$values),numeric(1)))]])
+    sols <- list()
+    for (i in 1:4) {
+        sols[[i]] <- Rsolnp::solnp(init_guesses[i, ], cost_func, LB = LB, UB = UB)
+    }
+    return(sols[[which.min(vapply(sols, function(x) min(x$values), numeric(1)))]])
 }
 
 

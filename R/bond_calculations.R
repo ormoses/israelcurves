@@ -15,24 +15,25 @@
 #' @importFrom stats uniroot
 #' @seealso \code{\link{calc_bond_name}}
 #' @export
-calc_bond <- function(thebond,calc_date,market_price,ex_day=NULL,year_days=365) {
-
-  #uses positive_CF to get the positive cash flow as of the discount date
-  pos_CF <- positive_CF(thebond,calc_date,ex_day,year_days)
-
-  # The function of the CashFlow to find the root (the yield)
-  bond_CF <- function(y) {
-    sum(pos_CF$payments/((1+y)^(pos_CF$pos_terms)))-market_price
-  }
-  #calculate YTM
-  ytm <- (uniroot(bond_CF,c(-0.03,0.15),tol=0.000001)$root)
-  #calculate duration
-  dur <- sum((pos_CF$pos_terms*pos_CF$payments)/((1+ytm)^(pos_CF$pos_terms)))/market_price
-  #calculate modified duration
-  mod_dur <- dur/(1+ytm)
-  #calculate convexity
-  conv <- (sum(((pos_CF$pos_terms+pos_CF$pos_terms^2)*pos_CF$payments)/((1+ytm)^(pos_CF$pos_terms)))/market_price)/(1+ytm)^2
-  return(list(ytm=ytm,duration=dur,mod_duration=mod_dur,covexity=conv))
+calc_bond <- function(thebond, calc_date, market_price, ex_day = NULL, year_days = 365) {
+    
+    # uses positive_CF to get the positive cash flow as of the discount date
+    pos_CF <- positive_CF(thebond, calc_date, ex_day, year_days)
+    
+    # The function of the CashFlow to find the root (the yield)
+    bond_CF <- function(y) {
+        sum(pos_CF$payments/((1 + y)^(pos_CF$pos_terms))) - market_price
+    }
+    # calculate YTM
+    ytm <- (uniroot(bond_CF, c(-0.03, 0.15), tol = 1e-06)$root)
+    # calculate duration
+    dur <- sum((pos_CF$pos_terms * pos_CF$payments)/((1 + ytm)^(pos_CF$pos_terms)))/market_price
+    # calculate modified duration
+    mod_dur <- dur/(1 + ytm)
+    # calculate convexity
+    conv <- (sum(((pos_CF$pos_terms + pos_CF$pos_terms^2) * pos_CF$payments)/((1 + ytm)^(pos_CF$pos_terms)))/market_price)/(1 + 
+        ytm)^2
+    return(list(ytm = ytm, duration = dur, mod_duration = mod_dur, covexity = conv))
 }
 
 #' Calculate bond attributes by name
@@ -45,9 +46,9 @@ calc_bond <- function(thebond,calc_date,market_price,ex_day=NULL,year_days=365) 
 #' @return A list with 4 items: yield to maturity, duration, modified duration and convexity
 #' @seealso \code{\link{calc_bond}}
 #' @export
-calc_bond_name <- function(bonds_list,bond_name,calc_date,market_price,ex_day=NULL,year_days=365) {
-  thebond <- bond_by_name(bonds_list,bond_name)
-  calc_bond(thebond,calc_date,market_price,ex_day,year_days)
+calc_bond_name <- function(bonds_list, bond_name, calc_date, market_price, ex_day = NULL, year_days = 365) {
+    thebond <- bond_by_name(bonds_list, bond_name)
+    calc_bond(thebond, calc_date, market_price, ex_day, year_days)
 }
 
 

@@ -1,4 +1,3 @@
-library(israelcurves)
 context("bond function")
 
 

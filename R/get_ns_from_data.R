@@ -1,12 +1,12 @@
 #' Compute daily curves from data
 #'
-#' Split the daily data by date and compute a curve for each day using a chosen \code{model} ("NS"/"NSS" for Nelson Siegel
+#' Split the daily data by date and compute a curve for each day using a chosen \code{model} ('NS'/'NSS' for Nelson Siegel
 #' and Svensson)
 #' @param bond_list a list of bond objects
 #' @param daily_data a dataframe contains daily data of the bonds constructs to be compatible with \code{\link{curve_model}}
 #' and can be extracted from Bloomberg using \code{\link{get_daily_data}}.
 #' @param min_obs an integer. The minimal number of bond's price observation in order to compute a curve for a certain date.
-#' @param model A string indicating the model to use - "NS" for Nelson Siegel and "NSS" for Svensson.
+#' @param model A string indicating the model to use - 'NS' for Nelson Siegel and 'NSS' for Svensson.
 #' @param adj_dur A logical indicates weather the calculation should be duration adjusted.
 #' @param adj_vol A logical indicates weather the calculation should be volume adjusted.
 #' @param max_vol A numeric indicates a maximal trade volume to be considered when calculating the volume adjustment for each bond.
@@ -30,7 +30,10 @@ make_params_for_all_dates <- function(bond_list,daily_data,min_obs=6,model="NS",
     init_guess <- c(4,-4,-3,0.1,3,6.8)
     result <- data.frame(date=as.Date("2000-01-01",format="%d-%m-%Y"),b0=0,b1=0,b2=0,b3=0,lambda1=0,lambda2=0,
                          min_term=0,max_term=0,num_obs=0)
+  } else {
+    stop("Unknown Model")
   }
+
   result <- result[-1,]
   num_model <- length(init_guess)
 
@@ -63,7 +66,7 @@ make_params_for_all_dates <- function(bond_list,daily_data,min_obs=6,model="NS",
       print(calc_date)
     }
   }
-  return(list(model=model,adj_dur=adj_dur,adj_vol=adj_vol,max_vol=max_vol,result=result))
+    return(list(model = model, adj_dur = adj_dur, adj_vol = adj_vol, max_vol = max_vol, result = result))
 }
 
 
