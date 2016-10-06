@@ -31,5 +31,5 @@ get_cpi_from_bloomberg <- function() {
 get_cpi_data <- function() {
   release <- get_release_dates_from_bloomberg()
   cpi <- get_cpi_from_bloomberg()
-  merge(release,cpi)
+  list(data=merge(release,cpi),base=2014)
 }
