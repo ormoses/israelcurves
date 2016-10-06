@@ -32,6 +32,7 @@ zerocurve <- function(model, params) {
 #'
 #' Plot a curve of zerocurve class.
 #' @param x,y a curve object (class "zerocurve").
+#' @inheritParams plot.bond
 #' @importFrom ggplot2 ggplot aes geom_line geom_text theme_classic theme scale_x_date labs ggtitle
 #' @export
 plot.zerocurve <- function(x,y=NULL,...) {
