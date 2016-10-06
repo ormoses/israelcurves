@@ -4,7 +4,7 @@
 \alias{get_daily_data}
 \title{Get daily data for a list of bonds}
 \usage{
-get_daily_data(srch_name, bond_list, start_date)
+get_daily_data(srch_name, bond_list, start_date, end_date = NULL)
 }
 \arguments{
 \item{srch_name}{A string. A bloomberg saved SRCH name.}
@@ -12,6 +12,8 @@ get_daily_data(srch_name, bond_list, start_date)
 \item{bond_list}{A list of bond objects.}
 
 \item{start_date}{A date to start getting the data from.}
+
+\item{end_date}{A date. Last date to get data from.}
 }
 \value{
 A dataframe with the following columns:
