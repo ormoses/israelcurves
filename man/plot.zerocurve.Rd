@@ -8,6 +8,8 @@
 }
 \arguments{
 \item{x, y}{a curve object (class "zerocurve").}
+
+\item{...}{Additional parameters}
 }
 \description{
 Plot a curve of zerocurve class.
