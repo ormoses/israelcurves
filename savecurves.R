@@ -1,0 +1,6 @@
+result_ils_nss_ex_date <- make_params_for_all_dates(bond_list,daily_data,ex_day=20,model="NSS")
+save(list=ls(all=TRUE),file="new_data1.RDA")
+result_ils_nss_ex_date_vol_no_max <- make_params_for_all_dates(bond_list,daily_data,ex_day=20,model="NSS",adj_vol = TRUE)
+save(list=ls(all=TRUE),file="new_data2.RDA")
+result_ils_nss_ex_date_vol_with_max <- make_params_for_all_dates(bond_list,daily_data,ex_day=20,model="NSS",adj_vol=TRUE,max_vol=75e6)
+save(list=ls(all=TRUE),file="new_data3.RDA")
