@@ -6,6 +6,9 @@
 \usage{
 get_cpi_from_bloomberg()
 }
+\value{
+a dataframe with CPI index with the last base
+}
 \description{
 A function to get the CPI Index from bloomberg using the last base
 }
