@@ -71,13 +71,18 @@ get_cpi_data <- function() {
 #' A function that gets a date and extracts the CPI index for this date.
 #' @param calc_date date. The calculation date.
 #' @param cpi_list list. A list of the cpi data from \code{\link{get_cpi_data}}
+#' @param base numeric. The year for the base index.
 #' @return A number represents the CPI index on the calc_date.
 #' @importFrom dplyr %>% filter select top_n
 #' @export
-cpi_by_date <- function(calc_date,cpi_list) {
-  cpi_list$data %>%
+cpi_by_date <- function(calc_date,cpi_list,base=2014) {
+  cpi_index <- cpi_list$data %>%
     filter(calc_date - known > 0) %>%
     top_n(1,known) %>%
     select(index) %>%
     as.numeric
+  if (base != 2014) {
+    cpi_index <- cpi_change_base(cpi_index, old_year = 2014, new_year = base)
+  }
+  cpi_index
 }
