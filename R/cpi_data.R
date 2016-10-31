@@ -19,7 +19,7 @@ cpi_change_base <- function(cpi_index, old_year, new_year) {
   if (new_year < old_year) {
     mult <- prod(base_table$mult[(years_places[2]+1):(years_places[1])])
   } else if (new_year > old_year) {
-    mult <- 1
+    mult <- prod(1 / (base_table$mult[(years_places[1]+1):(years_places[2])]))
   }
   mult * cpi_index
 
