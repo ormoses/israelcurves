@@ -18,6 +18,8 @@ build_curves <- function(srch_name,start_date,end_date=NULL,min_obs=6,
   bond_list <- create_all_bonds(srch_name)
   # Get the daily data for the bonds
   daily_data <- get_daily_data(srch_name,bond_list,start_date,end_date = end_date)
+  # Get CPI list
+  cpi_list <- get_cpi_data()
   # Compute the results
   result <- make_params_for_all_dates(bond_list,daily_data,min_obs,model,adj_dur,adj_vol,max_vol,ex_day)
   return(result)

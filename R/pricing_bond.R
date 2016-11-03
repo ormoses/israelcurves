@@ -6,21 +6,22 @@
 #' @param thebond A bond object
 #' @param disc_date The discount date
 #' @param rates A numeric vector of the discount rates corresponding to the payment dates
+#' @param cpi_list list of the known CPI by date
 #' @inheritParams calc_bond
 #' @return The price of the bond for the discount date (numeric)
 #' @seealso \code{\link{price_bond_model}} to price a bond using a model calculated discount rates.
 #' @export
 
-price_bond <- function(thebond, disc_date, rates, ex_day = NULL, year_days = 365) {
-    
+price_bond <- function(thebond, disc_date, rates, cpi_list, ex_day = NULL, year_days = 365) {
+
     # uses positive_CF to get the positive cash flow as of the discount date
     pos_CF <- positive_CF(thebond, disc_date, ex_day, year_days)
-    
+
     # Check that the length of the rates and the cashflow is the same
     if (length(rates) != length(pos_CF$pos_terms)) {
         stop(paste0("There are ", length(pos_CF$pos_terms), " dates and ", length(rates), " rates. Should be the same length."))
     }
-    
+
     # Price the bond - sum of the discounted cashflow
     res <- sum(pos_CF$payments/((1 + rates)^(pos_CF$pos_terms)))
     return(res)
@@ -35,13 +36,13 @@ price_bond <- function(thebond, disc_date, rates, ex_day = NULL, year_days = 365
 #' @inheritParams price_bond
 #' @seealso \code{\link{price_bond}} to price a bond using a manual vector of discount rates.
 #' @export
-price_bond_model <- function(thebond, disc_date, model, model_params, ex_day = NULL, year_days = 365) {
-    
+price_bond_model <- function(thebond, disc_date, model, model_params, cpi_list, ex_day = NULL, year_days = 365) {
+
     # uses positive_CF to get the positive cash flow as of the discount date
     pos_CF <- positive_CF(thebond, disc_date, ex_day, year_days)
     # Calculate the rates
     rates <- calc_yields(pos_CF$pos_terms, model_params, model)
-    
+
     # Price the bond - sum of the discounted cashflow
     res <- sum(pos_CF$payments/((1 + rates)^(pos_CF$pos_terms)))
     return(res)
@@ -52,26 +53,35 @@ price_bond_model <- function(thebond, disc_date, model, model_params, ex_day = N
 #' Helper function to get the bond's cashflow as of a certain date.
 #' @param thebond a bond object
 #' @param thedate calculation date
+#' @param cpi_list list of the known CPI by date
 #' @inheritParams calc_bond
 #' @return a list with the positive terms and payments
 #' @export
-positive_CF <- function(thebond, thedate, ex_day = NULL, year_days = 365) {
-    
+positive_CF <- function(thebond, thedate,  cpi_list, ex_day = NULL, year_days = 365) {
+
     # checks that thedate >= issue_date
-    if (thedate < thebond$issue_date) 
+    if (thedate < thebond$issue_date)
         stop("the calculation date has to be after the issue date")
-    
+
     # check that thedate < maturity date
-    if (thedate >= thebond$maturity) 
+    if (thedate >= thebond$maturity)
         stop("the calculation date has to be before the maturity of the bond")
-    
+
     # Computes the time to maturity from the discount date
     terms <- as.numeric((thebond$dates - thedate)/year_days)
-    
+
     # Calculate the cashflow as of the discount_date
     payments <- thebond$payments[terms > 0]
     pos_terms <- terms[terms > 0]
-    
+
+    # if known_cpi is not NULL compute linked cashflow
+    if (!is.null(thebond$known_CPI)) {
+      #extract the known CPI for the calculation date
+      thedate_cpi <- cpi_by_date(thedate, cpi_list)
+      cum_cpi <- thedate_cpi / thebond$known_CPI
+      payments <- payments * cum_cpi
+    }
+
     # check if ex_day is null, if not check if the date is between ex_date and payment date
     if (!is.null(ex_day)) {
         # find the date of the next payment
@@ -86,6 +96,6 @@ positive_CF <- function(thebond, thedate, ex_day = NULL, year_days = 365) {
             payments <- payments[-1]
         }
     }
-    
+
     return(list(pos_terms = pos_terms, payments = payments, terms = terms))
 }
