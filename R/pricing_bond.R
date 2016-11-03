@@ -75,7 +75,7 @@ positive_CF <- function(thebond, thedate,  cpi_list, ex_day = NULL, year_days = 
     pos_terms <- terms[terms > 0]
 
     # if known_cpi is not NULL compute linked cashflow
-    if (!is.null(thebond$known_CPI)) {
+    if (!is.null(thebond$known_CPI) & !is.na(thebond$known_CPI)) {
       #extract the known CPI for the calculation date
       thedate_cpi <- cpi_by_date(thedate, cpi_list)
       cum_cpi <- thedate_cpi / thebond$known_CPI
