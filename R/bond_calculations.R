@@ -19,7 +19,7 @@
 calc_bond <- function(thebond, calc_date, market_price, cpi_list, ex_day = NULL, year_days = 365) {
 
     # uses positive_CF to get the positive cash flow as of the discount date
-    pos_CF <- positive_CF(thebond, calc_date, ex_day, year_days)
+    pos_CF <- positive_CF(thebond, calc_date, cpi_list, ex_day, year_days)
 
     # The function of the CashFlow to find the root (the yield)
     bond_CF <- function(y) {

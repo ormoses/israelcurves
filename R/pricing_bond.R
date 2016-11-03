@@ -39,7 +39,7 @@ price_bond <- function(thebond, disc_date, rates, cpi_list, ex_day = NULL, year_
 price_bond_model <- function(thebond, disc_date, model, model_params, cpi_list, ex_day = NULL, year_days = 365) {
 
     # uses positive_CF to get the positive cash flow as of the discount date
-    pos_CF <- positive_CF(thebond, disc_date, ex_day, year_days)
+    pos_CF <- positive_CF(thebond, disc_date, cpi_list, ex_day, year_days)
     # Calculate the rates
     rates <- calc_yields(pos_CF$pos_terms, model_params, model)
 

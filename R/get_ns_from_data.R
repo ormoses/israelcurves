@@ -5,6 +5,7 @@
 #' @param bond_list a list of bond objects
 #' @param daily_data a dataframe contains daily data of the bonds constructs to be compatible with \code{\link{curve_model}}
 #' and can be extracted from Bloomberg using \code{\link{get_daily_data}}.
+#' @param cpi_list list of the known CPI by date
 #' @param min_obs an integer. The minimal number of bond's price observation in order to compute a curve for a certain date.
 #' @param model A string indicating the model to use - 'NS' for Nelson Siegel and 'NSS' for Svensson.
 #' @param adj_dur A logical indicates weather the calculation should be duration adjusted.
@@ -21,7 +22,8 @@
 #'  }
 #' @importFrom dplyr filter select
 #' @export
-make_params_for_all_dates <- function(bond_list,daily_data,min_obs=6,model="NS",adj_dur=TRUE,adj_vol=FALSE,max_vol=NULL,ex_day=NULL) {
+make_params_for_all_dates <- function(bond_list, daily_data, cpi_list, min_obs = 6, model = "NS",
+                                      adj_dur = TRUE, adj_vol = FALSE, max_vol = NULL, ex_day = NULL) {
   #define initial guess for the model and define a blank dataframe for the results
   if (model=="NS") {
     init_guess <- c(4,-4,-3,3)
@@ -55,8 +57,8 @@ make_params_for_all_dates <- function(bond_list,daily_data,min_obs=6,model="NS",
       result[count,"date"] <- calc_date
 
       # last calculation as initial guess
-      model_result <- curve_model(bond_list,market_data,calc_date,model=model,init_guess=init_guess,
-                        adj_dur=adj_dur,adj_vol=adj_vol,max_vol=max_vol,ex_day)
+      model_result <- curve_model(bond_list, market_data, calc_date, cpi_list, model = model, init_guess = init_guess,
+                        adj_dur = adj_dur, adj_vol = adj_vol, max_vol = max_vol, ex_day)
       result[count,2:(2+num_model-1)] <- model_result$pars
       result[count,(2+num_model):(2+num_model+1)] <- range(data$term)
       result[count,(2+num_model+2)] <- nrow(data)
