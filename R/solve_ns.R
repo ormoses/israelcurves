@@ -58,6 +58,8 @@ curve_model <- function(bonds_list, market_data, calc_date, cpi_list, model="NS"
                           apply(market_data,1,
                                 function(x) calc_bond_name(bonds_list,x["name"],calc_date,as.numeric(x["market_price"]), cpi_list)$duration))
   }
+  #if duration is NA remove the row
+  market_data <- dplyr::filter(market_data,!is.na(duration))
 
   #Create a data frame that contains all bonds from the list and their market_data
   #vector of the names
