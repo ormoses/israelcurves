@@ -56,9 +56,11 @@ make_params_for_all_dates <- function(bond_list, daily_data, cpi_list, min_obs =
       calc_date <- data$date[1]
       market_data <- select(data,market_price:name)
       result[count,"date"] <- calc_date
+      #add linkage to CF
+      bond_list_for_date <- make_bond_list_nominal(bond_list, calc_date, cpi_list)
 
       # last calculation as initial guess
-      model_result <- curve_model(bond_list, market_data, calc_date, cpi_list, model = model, init_guess = init_guess,
+      model_result <- curve_model(bond_list_for_date, market_data, calc_date, cpi_list, model = model, init_guess = init_guess,
                         adj_dur = adj_dur, adj_vol = adj_vol, max_vol = max_vol, ex_day)
       result[count,2:(2+num_model-1)] <- model_result$pars
       result[count,(2+num_model):(2+num_model+1)] <- range(data$term)
