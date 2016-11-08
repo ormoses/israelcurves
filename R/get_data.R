@@ -26,8 +26,11 @@ get_daily_data <- function(srch_name, bond_list, start_date, end_date=NULL) {
     x <- as.character(Rblpapi::bsrch(paste0("FI:", srch_name))$id)
     x <- gsub(" Corp", "@TASE Corp", x)
     # get bonds main data
-    bond_names <- x %>% Rblpapi::bdp(c("ID_BB", "SERIES")) %>% mutate(ID_BB = paste0(substr(ID_BB, 1, nchar(ID_BB) -
+    bond_names <- x %>% Rblpapi::bdp(c("ID_BB", "SERIES", "MATURITY")) %>% mutate(ID_BB = paste0(substr(ID_BB, 1, nchar(ID_BB) -
         1), "@TASE Corp"))
+    bond_names <- bond_names %>%
+                  mutate(SERIES = ifelse(SERIES=="",paste0(format(MATURITY,"%m%y")),SERIES)) %>%
+                  select(ID_BB, SERIES)
     # get bonds daily data
     daily_data <- x %>% Rblpapi::bdh(c("PX_LAST", "VOLUME"), start.date = start_date, end.date=end_date)
     # Disconnect bloomberg
