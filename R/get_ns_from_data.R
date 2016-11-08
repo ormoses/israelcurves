@@ -24,6 +24,7 @@
 #' @export
 make_params_for_all_dates <- function(bond_list, daily_data, cpi_list, min_obs = 6, model = "NS",
                                       adj_dur = TRUE, adj_vol = FALSE, max_vol = NULL, ex_day = NULL) {
+
   #define initial guess for the model and define a blank dataframe for the results
   if (model=="NS") {
     init_guess <- c(4,-4,-3,3)
