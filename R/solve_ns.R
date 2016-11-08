@@ -52,7 +52,6 @@ curve_model <- function(bonds_list, market_data, calc_date, cpi_list, model="NS"
   init_guesses[2,] <- init_def
   init_guesses[3,] <- stats::runif(num_model,min=LB,max=UB)
   init_guesses[4,] <- stats::runif(num_model,min=LB_narrow,max=UB_narrow)
-
   #if adj_dur==TRUE adds duration column to market_data
   if (adj_dur==TRUE) {
     market_data <- cbind(market_data,duration=
@@ -70,7 +69,7 @@ curve_model <- function(bonds_list, market_data, calc_date, cpi_list, model="NS"
 
   cost_func <- function(init_guess) {
     #get the model prices of the bond using the current guess
-    bonds_model_prices <- vapply(bonds_list,function(x) price_bond_model(x,calc_date,model=model,model_params=init_guess,ex_day = ex_day),numeric(1))
+    bonds_model_prices <- vapply(bonds_list,function(x) price_bond_model(x,calc_date,model=model,model_params=init_guess, cpi_list = cpi_list, ex_day = ex_day),numeric(1))
     model_bonds <- data.frame(name=act_names,model_price=bonds_model_prices)
     # merge both
     bonds_data <- merge(model_bonds,market_data)
