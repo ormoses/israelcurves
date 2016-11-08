@@ -26,7 +26,10 @@ calc_bond <- function(thebond, calc_date, market_price, cpi_list, ex_day = NULL,
         sum(pos_CF$payments/((1 + y)^(pos_CF$pos_terms))) - market_price
     }
     # calculate YTM
-    ytm <- (uniroot(bond_CF, c(-0.03, 0.15), tol = 1e-06)$root)
+    ytm <- try(uniroot(bond_CF, c(-0.03, 0.15), tol = 1e-06)$root)
+    if (class(ytm)=="try-error") {
+      return(list(ytm = NA, duration = NA, mod_duration = NA, covexity = NA))
+    }
     # calculate duration
     dur <- sum((pos_CF$pos_terms * pos_CF$payments)/((1 + ytm)^(pos_CF$pos_terms)))/market_price
     # calculate modified duration
