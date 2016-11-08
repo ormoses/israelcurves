@@ -39,10 +39,14 @@ get_daily_data <- function(srch_name, bond_list, start_date, end_date=NULL) {
     names(daily_data) <- bond_names[match(names(daily_data), bond_names$ID_BB), 2]
     # Add the name of the series to a new column
     daily_data <- lapply(seq_along(daily_data), function(i) mutate(daily_data[[i]], name = names(daily_data)[i]))
+    # get the names from the bond_list
+    bond_list_names <- vapply(bond_list_cpi,function(x) x$name, character(1))
     # change NA to 0 in the volume
     daily_data <- lapply(daily_data, function(x) replace(x, is.na(x), 0))
     # Unlist the data
     daily_data <- do.call(rbind, daily_data)
+    # filter only the data where the names are in bond_list
+    daily_data <- filter(daily_data, name %in% bond_list_names)
     # Add maturity and arrange by date and maturiy
     maturs <- apply(daily_data, 1, function(x) bond_by_name(bond_list, x[4])$maturity)
     daily_data <- daily_data %>% mutate(maturity = as.Date(maturs, origin = "1970-01-01")) %>% arrange(date,
