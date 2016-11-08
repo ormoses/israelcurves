@@ -86,3 +86,20 @@ cpi_by_date <- function(calc_date,cpi_list,base=2014) {
   }
   cpi_index
 }
+
+make_bond_nominal <- function(thebond, thedate, cpi_list) {
+ # if known_cpi is NULL or NA return the same bond
+    if (is.null(thebond$known_CPI)) return(thebond)
+    if  (is.na(thebond$known_CPI)) return(thebond)
+
+    #extract the known CPI for the calculation date
+    thedate_cpi <- cpi_by_date(thedate, cpi_list)
+    cum_cpi <- thedate_cpi / thebond$known_CPI
+    thebond$payments <- thebond$payments * cum_cpi
+    thebond
+}
+
+make_bond_list_nominal <- function(bond_list, thedate, cpi_list) {
+  lapply(bond_list,function(x) make_bond_nominal(x, thedate, cpi_list))
+}
+
