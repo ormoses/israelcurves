@@ -20,6 +20,7 @@
 #' @importFrom dplyr mutate arrange select %>%
 #' @export
 get_daily_data <- function(srch_name, bond_list, start_date, end_date=NULL) {
+  browser()
     # Connect to bloomberg
     con <- Rblpapi::blpConnect()
     # get tickers list from a bloomberg custom SRCH
@@ -40,7 +41,7 @@ get_daily_data <- function(srch_name, bond_list, start_date, end_date=NULL) {
     # Add the name of the series to a new column
     daily_data <- lapply(seq_along(daily_data), function(i) mutate(daily_data[[i]], name = names(daily_data)[i]))
     # get the names from the bond_list
-    bond_list_names <- vapply(bond_list_cpi,function(x) x$name, character(1))
+    bond_list_names <- vapply(bond_list,function(x) x$name, character(1))
     # change NA to 0 in the volume
     daily_data <- lapply(daily_data, function(x) replace(x, is.na(x), 0))
     # Unlist the data
