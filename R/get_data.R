@@ -20,7 +20,6 @@
 #' @importFrom dplyr mutate arrange select %>%
 #' @export
 get_daily_data <- function(srch_name, bond_list, start_date, end_date=NULL) {
-  browser()
     # Connect to bloomberg
     con <- Rblpapi::blpConnect()
     # get tickers list from a bloomberg custom SRCH
