@@ -28,3 +28,18 @@ build_curves <- function(srch_name,start_date,end_date=NULL,min_obs=6,
   return(result)
 }
 
+#' A function that gets a curve for a vector of points and a certain date
+#' @param maturities numeric. A vector of maturities to calculate yields.
+#' @inheritParams build_curves
+#' @return A vector of yields.
+build_points_for_date <- function(maturities, srch_name, the_date, min_obs=6,
+                         model="NS", adj_dur=TRUE, adj_vol=FALSE, max_vol=NULL, ex_day=NULL) {
+  # Get the model parameters
+  res <- build_curves(srch_name, the_date, the_date, min_obs, model, adj_dur, adj_vol, max_vol, ex_day=NULL)
+  # Extract only the parameters
+  if (model == "NS")  res <- as.numeric(res$result[1,2:5])
+  else if (model == "NSS") res <- as.numeric(res$result[1,2:7])
+  ylds <- calc_yields(maturities, res, model)
+  names(ylds) <- maturities
+  ylds
+}
