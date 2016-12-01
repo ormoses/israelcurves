@@ -13,9 +13,13 @@
 #' }
 #' @export
 build_curves <- function(srch_name,start_date,end_date=NULL,min_obs=6,
-                         model="NS",adj_dur=TRUE,adj_vol=FALSE,max_vol=NULL,ex_day=NULL) {
+                         model="NS",adj_dur=TRUE,adj_vol=FALSE,max_vol=NULL,ex_day=NULL, cpi=FALSE) {
   # Get the main bond data - bond_list
-  bond_list <- create_all_bonds(srch_name)
+  if (cpi==FALSE) {
+    bond_list <- create_all_bonds(srch_name)
+  } else if (cpi==TRUE) {
+    bond_list <- create_all_bonds_cpi(srch_name)
+  }
   cat("===== Got all bonds ===== \n")
   # Get the daily data for the bonds
   daily_data <- get_daily_data(srch_name,bond_list,start_date,end_date = end_date)
