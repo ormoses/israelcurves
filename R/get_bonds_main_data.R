@@ -89,3 +89,11 @@ create_all_bonds <- function(srch_name) {
     create_bonds(get_bond_data(srch_name)$cashflows)
 }
 
+create_all_bonds_cpi <- function(srch_name) {
+  the_data <- get_bond_data(srch_name)
+  bond_list <- create_bonds(the_data$cashflows)
+  bond_data <- create_bonds_no_BB(the_data$bond_data)
+  bond_list_no_BB <- make_list_of_bonds(bond_data)
+  merge_bond_lists(bond_list_no_BB, bond_list)
+}
+
