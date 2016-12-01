@@ -36,7 +36,7 @@ check_boi <- function(result,boi_file) {
   BOI <- filter(BOI,date %in% model_yields$date)
   dif <- BOI
   dif[2:end_file] <- BOI[2:end_file]-model_yields[2:end_file]
-  maxs <- apply(dif,1,function(x) as.numeric(max(x[2:end_file])))
+  maxs <- apply(dif,1,function(x) max(as.numeric(x[2:end_file])))
   maxs <- data.frame(date=BOI$date,max_difference=maxs)
   list(dif=dif,BOI=BOI,model=model_yields,maxs=maxs)
 }
